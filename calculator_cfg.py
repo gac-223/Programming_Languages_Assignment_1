@@ -21,9 +21,16 @@ class CalcTransformer(Transformer):
 
     def neg(self, items):
         return('neg', items[0])
+
+    def log(self, items):
+        return ('log', items[0], items[1])
+
+    def power(self, items):
+        return('power', items[0], items[1])
     
     def num(self, items):
         return ('num', float(items[0]))
+
 
 def evaluate(ast):
     if ast[0] == 'plus':
@@ -34,6 +41,10 @@ def evaluate(ast):
         return evaluate(ast[1]) * evaluate(ast[2])
     elif ast[0] == 'neg':
         return -1 * evaluate(ast[1])
+    elif ast[0] == 'log':
+        return math.log(evaluate(ast[1]), evaluate(ast[2]))
+    elif ast[0] == 'power':
+        return evaluate(ast[1]) ** evaluate(ast[2])
     elif ast[0] == 'num':
         return ast[1]
     else:
