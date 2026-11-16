@@ -8,3 +8,33 @@
 4. In the original interpreter, you don't always get the expected result. Not all results reduce to normal form. For example, (\x.(\y.y) x) reduces to (\x.((\y.y) x)) instead of to (\x.x). After exploring the interpreter, we can see that we are only actually "reducing" the very first step, and everything else is left unreduced. Furthermore, any rercursive lambda expressions would cause errors in our program, so that would also I guess be unexpected.
 
 5. (\x.(\y.y) x)
+
+Exercise 6
+
+Debugger practice only, nothing to report.
+
+Exercise 7
+
+Each line is the term after one substitution:
+
+((\m.\n. m n) (\f.\x. f (f x))) (\f.\x. f (f (f x)))
+(\Var1. (\f.\x. f (f x)) Var1) (\f.\x. f (f (f x)))
+(\Var2.\Var4. Var2 (Var2 Var4)) (\f.\x. f (f (f x)))
+\Var5. (\f.\x. f (f (f x))) ((\f.\x. f (f (f x))) Var5)
+
+The interpreter stops there because the last term is a lambda, and it never reduces inside lambdas.
+
+Exercise 8
+
+13: eval (((\m.(\n.(m n))) (\f.(\x.(f (f x))))) (\f.(\x.(f x))))
+    39: eval ((\m.(\n.(m n))) (\f.(\x.(f (f x)))))
+        39: eval (\m.(\n.(m n)))
+        44: subst (\n.(m n)) [(\f.(\x.(f (f x)))) / m]
+        45: eval (\Var1.((\f.(\x.(f (f x)))) Var1))
+    44: subst ((\f.(\x.(f (f x)))) Var1) [(\f.(\x.(f x))) / Var1]
+    45: eval ((\Var2.(\Var4.(Var2 (Var2 Var4)))) (\f.(\x.(f x))))
+        39: eval (\Var2.(\Var4.(Var2 (Var2 Var4))))
+        44: subst (\Var4.(Var2 (Var2 Var4))) [(\f.(\x.(f x))) / Var2]
+        45: eval (\Var5.((\f.(\x.(f x))) ((\f.(\x.(f x))) Var5)))
+
+Line numbers are call sites in the starter's interpreter.py.
